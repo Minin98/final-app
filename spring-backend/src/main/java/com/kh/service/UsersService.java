@@ -34,29 +34,18 @@ public class UsersService {
 	}
 
 	public boolean checkIdExists(String id) {
+		System.out.println(id);
 		int count = mapper.checkIdExists(id);
+		System.out.println(count);
 		return count > 0;
 	}
 
 	public boolean checkNickNameExists(String nickname) {
-		int count = mapper.checkNickNameExists(nickname);
-		return count > 0;
+		if(mapper.checkUsersNickname(nickname) > 0 || mapper.checkKakaoNickname(nickname) > 0)
+			return true;
+		return false;
 	}
 
-	public KakaoDTO kakaoLogin(String uno, String nickname, int grade) {
-		Map<String, Object> map = new HashMap<>();
-		int count = mapper.checkKakaoId(uno);
 
-		map.put("uno", uno);
-		map.put("nickname", nickname);
-		map.put("grade", grade);
-
-		if (count == 0) {
-			// 유저가 없으면 회원가입
-			int result = mapper.insertKakaoUser(map);
-		}
-
-		// 유저 정보를 다시 불러와서 반환
-		return mapper.findKakaoUser(uno);
-	}
+	
 }

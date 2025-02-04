@@ -19,21 +19,14 @@
         WHERE id = #{id}
     </select>
      <!-- 닉네임 중복 체크 -->
-    <select id="checkNickNameExists" resultType="int">
+    <select id="checkUsersNickname" resultType="int">
         SELECT COUNT(*)
         FROM users
         WHERE nickname = #{nickname}
     </select>
-    <!-- 카카오 유저 체크 -->
-    <select id="checkKakaoId" resultType="int">
-    	select count(*) from kakao_user where uno = #{uno}
-    </select>
-    <!-- 카카오 유저 저장 -->
-    <insert id="insertKakaoUser" parameterType="com.kh.dto.KakaoDTO">
-    	insert into kakao_user(uno, nickname, grade) values(#{uno}, #{nickname}, #{grade})
-    </insert>
-    <!-- 카카오 유저 로그인 -->
-    <select id="findKakaoUser" resultType="com.kh.dto.KakaoDTO">
-    	select * from kakao_user where uno = #{uno}
+    <select id="checkKakaoNickname" resultType="int">
+        SELECT COUNT(*)
+        FROM kakao_users
+        WHERE nickname = #{nickname}
     </select>
 </mapper>

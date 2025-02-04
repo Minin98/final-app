@@ -54,7 +54,7 @@ public class UsersController {
 		String email = body.get("email");
 		String phone = body.get("phone");
 		int grade = "student".equals(body.get("role")) ? 2 : 1;
-		UsersDTO dto = new UsersDTO(name, id, nickname, password, nickname, email, phone, grade);
+		UsersDTO dto = new UsersDTO(name, id, nickname, password, email, phone, grade);
 		int count = usersService.insertUser(dto);
 		map.put("count", count);
 		if (count > 0) {
@@ -66,12 +66,14 @@ public class UsersController {
 	}
 
 	@PostMapping("/check/id")
-	public boolean checkId(@RequestBody String id) {
+	public boolean checkId(@RequestBody Map<String, String> body) {
+		String id = body.get("id"); 
 		return usersService.checkIdExists(id);
 	}
 
 	@PostMapping("/check/nickname")
-	public boolean checkNickName(@RequestBody String nickname) {
+	public boolean checkNickName(@RequestBody Map<String, String> body) {
+		String nickname = body.get("nickname");
 		return usersService.checkNickNameExists(nickname);
 	}
 }
