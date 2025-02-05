@@ -29,4 +29,21 @@
         FROM kakao_users
         WHERE nickname = #{nickname}
     </select>
+    <update id="updateUser" parameterType="com.kh.dto.UsersDTO">
+		UPDATE USERS SET 
+    NICKNAME = #{nickname},
+    NAME = #{name},
+    EMAIL = #{email},
+    PHONE = #{phone},
+    GRADE = #{grade}
+		WHERE UNO = #{uno};
+	</update>
+    <select id="findUserByUno" parameterType="int" resultType="com.kh.dto.UsersDTO">
+		SELECT *FROM USERS u WHERE u.UNO = #{v}
+	</select>
+    <update id="updateprofilepath" parameterType="com.kh.dto.UsersDTO">
+      UPDATE USERS SET 
+      PROFILEPATH = #{profilepath}
+		  WHERE UNO = #{uno}
+    </update>
 </mapper>

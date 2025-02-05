@@ -41,11 +41,21 @@ public class UsersService {
 	}
 
 	public boolean checkNickNameExists(String nickname) {
-		if(mapper.checkUsersNickname(nickname) > 0 || mapper.checkKakaoNickname(nickname) > 0)
+		if (mapper.checkUsersNickname(nickname) > 0 || mapper.checkKakaoNickname(nickname) > 0)
 			return true;
 		return false;
 	}
 
+	public UsersDTO findUserByUno(String string) {
+		return mapper.findUserByUno(string);
+	}
 
-	
+	public UsersDTO updateUser(UsersDTO user) {
+		return mapper.updateUser(user);
+	}
+
+	public int updateprofilepath(UsersDTO user) {
+		return mapper.updateprofilepath(user);
+	}
+
 }

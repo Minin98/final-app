@@ -22,4 +22,10 @@ public interface UsersMapper {
 
 	int checkKakaoNickname(String nickname);
 
+	UsersDTO findUserByUno(String string);
+
+	UsersDTO updateUser(UsersDTO user);
+
+	int updateprofilepath(UsersDTO user);
+
 }

@@ -20,6 +20,7 @@ public class UsersDTO {
 	private String email;
 	private String phone;
 	private int grade;
+	private String profilepath;
 
 	public UsersDTO(String id, String nickname, String password, String name, String email, String phone, int grade) {
 		this.id = id;
