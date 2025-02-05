@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.mapper.VideoMapper">
+
+<resultMap id="VideoMap" type="com.kh.dto.VideoDTO">
+    <result column="video_number" property="videoNumber"/>
+    <result column="CHAPTER_NUMBER" property="chapterNumber"/>
+    <result column="video_title" property="videoTitle" jdbcType="VARCHAR"/>
+    <result column="video_url" property="videoURL"  jdbcType="VARCHAR"/>
+    <result column="video_duration" property="videoDuration"  jdbcType="VARCHAR"/>
+    <result column="video_order_number" property="videoOrderNumber"/>
+    <result column="video_create_time" property="videoCreateTime"/>
+</resultMap>
+
+    <!-- 해당 챕터의 영상 조회 -->
+    <select id="selectVideo" parameterType="int" resultMap="VideoMap">
+        SELECT 
+            video_number, 
+            chapter_number, 
+            video_title, 
+            video_url, 
+            video_duration, 
+            video_order_number, 
+            video_create_time
+        FROM VIDEO
+        WHERE chapter_number = #{chapterNumber}
+        ORDER BY video_order_number ASC
+    </select>
+
+
+</mapper>
