@@ -35,6 +35,7 @@ public class ClassService {
     }
 
     public List<ClassDTO> searchClasses(String searchKeyword, String category, String sort) {
+        System.out.println(" ClassService 검색된 강의 목록: " + searchKeyword + ", " + category + ", " + sort);
         return mapper.searchClasses(searchKeyword, category, sort);
     }
 

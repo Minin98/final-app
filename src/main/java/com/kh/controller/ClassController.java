@@ -69,7 +69,7 @@ public class ClassController {
 
         try {
             List<ClassDTO> classList = classService.searchClasses(searchKeyword, category, sort);
-            // System.out.println("🔍 검색된 강의 목록: " + classList);
+            System.out.println(" ClassController 검색된 강의 목록: " + searchKeyword + ", " + category + ", " + sort);
             return ResponseEntity.ok(classList);
 
         } catch (Exception e) {
@@ -159,8 +159,13 @@ public class ClassController {
             map.put("code", 1);
             map.put("msg", "강의 등록 성공");
 
+            System.out.println("강의 등록 완료 - classNumber : " + classNumber);
+
         } catch (Exception e) {
             e.printStackTrace();
+
+            System.err.println("강의 등록 중 오류 발생 : " + e.getMessage());
+
             map.put("code", 2);
             map.put("msg", "강의 등록 실패");
         }

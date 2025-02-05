@@ -65,8 +65,19 @@ public class JwtTokenProvider {
 
 	// 유저 등급
 	public String getRoleFromToken(String token) {
-		return (String) getClaims(token).get("grade");
+		// return (String) getClaims(token).get("grade");
+
+		Object gradeObject = getClaims(token).get("grade");
+	
+		if (gradeObject instanceof Integer) {
+			return String.valueOf(gradeObject);  // Integer에서 String 변환
+		} else if (gradeObject instanceof String) {
+			return (String) gradeObject;  // 이미 String이면 그대로 반환
+		} else {
+			return null;  // 예상치 못한 타입이면 null 반환
+		}
 	}
+	
 
 	// 유저 닉네임
 	public String getNicknameFromToken(String token) {

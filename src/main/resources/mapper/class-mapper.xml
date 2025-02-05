@@ -72,10 +72,10 @@
             </if>
         </where>
         <choose>
-            <when test="sort == '최신순'">
+            <when test="sort = '최신순'">
                 ORDER BY c.create_time DESC
             </when>
-            <when test="sort == '평점순'">
+            <when test="sort = '평점순'">
                 ORDER BY c.rate DESC
             </when>
             <otherwise>
@@ -87,15 +87,7 @@
     <!-- 강의 검색 기능 -->
     <select id="searchClasses" resultMap="classMap">
         SELECT 
-            c.class_number, 
-            c.title, 
-            c.description, 
-            c.category, 
-            c.create_time, 
-            c.update_time, 
-            c.thumbnail, 
-            c.rate, 
-            c.uno, 
+            c.*,
             u.name
         FROM CLASS c
         JOIN USERS u ON c.uno = u.uno
