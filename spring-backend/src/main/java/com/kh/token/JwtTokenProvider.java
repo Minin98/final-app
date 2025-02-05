@@ -65,6 +65,7 @@ public class JwtTokenProvider {
 
 	// 유저 등급
 	public String getRoleFromToken(String token) {
+		System.out.println("jwtToken - getRoleFromToken : " + token);
 		return (String) getClaims(token).get("grade");
 	}
 

@@ -107,12 +107,18 @@ public class ClassController {
 
         Map<String, Object> map = new HashMap<>();
 
+        System.out.println(map);
+
         try {
             token = token != null ? token.replace("Bearer ", "") : null;
+            System.out.println("try 들어옴 토큰 : "+token);
+
             String role = tokenProvider.getRoleFromToken(token);
-            int userGrade = Integer.parseInt(role);
+            System.out.println("토큰 : "+role);
+
+            int userGrade = "강사".equals(role) ? 1 : 2;
+            System.out.println("강사?? : "+userGrade);
             
-            System.out.println(userGrade);
             
             if (userGrade != 1) {
                 map.put("code", 3);
