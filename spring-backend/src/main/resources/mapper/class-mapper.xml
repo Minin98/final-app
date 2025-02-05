@@ -13,34 +13,47 @@
         <result column="category" property="category" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
-        <result column="thumbnail" property="thumbnail" />
+        <result column="thumbnail" property="thumbnail" jdbcType="VARCHAR" />
         <result column="rate" property="rate" />
         <result column="name" property="name"/>
     </resultMap>
 
-    <select id="selectClass" parameterType="map" resultType="com.kh.dto.ClassDTO">
-        SELECT *
-        FROM CLASS
-        WHERE CLASS_NUMBER = #{classNumber}
+   <!-- 특정 강의 조회 -->
+    <select id="selectClass" parameterType="int" resultType="com.kh.dto.ClassDTO">
+        SELECT 
+            c.class_number,
+            c.title,
+            c.description,
+            c.category,
+            c.create_time,
+            c.update_time,
+            c.thumbnail,
+            c.rate,
+            c.uno,
+            u.name
+        FROM CLASS c
+        JOIN USERS u ON c.uno = u.uno
+        WHERE class_number = #{classNumber}
     </select>
 
+    <!-- 최신 강의 3개 조회 -->
     <select id="selectLatestClasses" resultMap="classMap">
-    SELECT 
-    c.class_number,
-    c.title,
-    c.description,
-    c.category,
-    c.create_time,
-    c.update_time,
-    c.thumbnail,
-    c.rate,
-    c.uno,
-    u.name
-FROM CLASS c
-JOIN USERS u ON c.uno = u.uno
-ORDER BY c.create_time DESC
-FETCH FIRST 3 ROWS ONLY
-</select>
+        SELECT 
+            c.class_number,
+            c.title,
+            c.description,
+            c.category,
+            c.create_time,
+            c.update_time,
+            c.thumbnail,
+            c.rate,
+            c.uno,
+            u.name
+        FROM CLASS c
+        JOIN USERS u ON c.uno = u.uno
+        ORDER BY c.create_time DESC
+        FETCH FIRST 3 ROWS ONLY
+    </select>
 
     <select id="getAllClasses" resultMap="classMap">
         SELECT *
@@ -59,6 +72,42 @@ FETCH FIRST 3 ROWS ONLY
             </if>
         </where>
         <choose>
+            <when test="sort == '최신순'">
+                ORDER BY c.create_time DESC
+            </when>
+            <when test="sort == '평점순'">
+                ORDER BY c.rate DESC
+            </when>
+            <otherwise>
+                ORDER BY c.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 강의 검색 기능 -->
+    <select id="searchClasses" resultMap="classMap">
+        SELECT 
+            c.class_number, 
+            c.title, 
+            c.description, 
+            c.category, 
+            c.create_time, 
+            c.update_time, 
+            c.thumbnail, 
+            c.rate, 
+            c.uno, 
+            u.name
+        FROM CLASS c
+        JOIN USERS u ON c.uno = u.uno
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (LOWER(c.title) LIKE '%' || LOWER(#{searchKeyword}) || '%')
+            </if>
+            <if test="category != null and category != '전체'">
+                AND c.category = #{category}
+            </if>
+        </where>
+        <choose>
             <when test="sort = '최신순'">
                 ORDER BY c.create_time DESC
             </when>
@@ -71,33 +120,15 @@ FETCH FIRST 3 ROWS ONLY
         </choose>
     </select>
 
-    <select id="searchClasses" resultMap="classMap">
-    SELECT c.class_number, c.title, c.description, c.category, 
-           c.create_time, c.update_time, c.thumbnail, c.rate, 
-           c.uno, u.name
-    FROM CLASS c
-    JOIN USERS u ON c.uno = u.uno
-    <where>
-        <if test="searchKeyword != null and searchKeyword != ''">
-    AND (LOWER(c.title) LIKE '%' || LOWER(#{searchKeyword}) || '%')
-</if>
+    <select id="selectClassNo" resultType="int">
+        SELECT seq_class_class_number.NEXTVAL FROM dual
+    </select>
 
-        <if test="category != null and category != '전체'">
-            AND c.category = #{category}
-        </if>
-    </where>
-    <choose>
-        <when test="sort = '최신순'">
-            ORDER BY c.create_time DESC
-        </when>
-        <when test="sort = '평점순'">
-            ORDER BY c.rate DESC
-        </when>
-        <otherwise>
-            ORDER BY c.create_time DESC
-        </otherwise>
-    </choose>
-</select>
+    <insert id="insertClass" parameterType="com.kh.dto.ClassDTO">
+        INSERT INTO CLASS (class_number, title, description, category, create_time, update_time, thumbnail, rate, uno)
+        VALUES (#{classNumber}, #{title}, #{description}, #{category}, SYSDATE, SYSDATE, #{thumbnail}, 0, #{uno})
+    </insert>
+
 
 
 </mapper>

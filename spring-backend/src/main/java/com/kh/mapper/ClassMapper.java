@@ -23,4 +23,9 @@ public interface ClassMapper {
     );
 
     List<ClassDTO> searchClasses(String searchKeyword, String category, String sort);
+
+    int selectClassNo(); // 새 강의 번호 생성
+
+    int insertClass(ClassDTO classDTO); // 강의 등록
+
 }

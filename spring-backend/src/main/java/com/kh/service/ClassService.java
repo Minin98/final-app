@@ -10,7 +10,7 @@ import com.kh.mapper.ClassMapper;
 
 @Service
 public class ClassService {
-    @Autowired
+
     private ClassMapper mapper;
 
     public ClassService(ClassMapper mapper) {
@@ -36,6 +36,15 @@ public class ClassService {
 
     public List<ClassDTO> searchClasses(String searchKeyword, String category, String sort) {
         return mapper.searchClasses(searchKeyword, category, sort);
+    }
+
+    public int insertClass(ClassDTO classDTO) {
+        int classNumber = mapper.selectClassNo();
+        classDTO.setClassNumber(classNumber);
+
+        int count = mapper.insertClass(classDTO);
+
+        return count > 0 ? classNumber : -1; // 성공하면 강의 번호, 실패하면 -1 반환
     }
 
 }

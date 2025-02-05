@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.mapper.ChapterMapper">
+
+<resultMap id="ChapterMap" type="com.kh.dto.ChapterDTO">
+    <result column="CHAPTER_NUMBER" property="chapterNumber"/>
+    <result column="CLASS_NUMBER" property="classNumber"/>
+    <result column="CHAPTER_NAME" property="chapterName" jdbcType="VARCHAR"/>
+    <result column="CHAPTER_CREATE_TIME" property="chapterCreateTime"/>
+</resultMap>
+
+    <!-- 특정 강의 내의 챕터 조회 -->
+    <select id="selectChapter" parameterType="int" resultMap="ChapterMap">
+    SELECT 
+        CHAPTER_NUMBER, 
+        CHAPTER_NAME, 
+        CHAPTER_CREATE_TIME,
+        CLASS_NUMBER
+    FROM CHAPTER
+    WHERE CLASS_NUMBER = #{classNumber}
+</select>
+
+
+
+</mapper>
