@@ -39,6 +39,7 @@
     <!-- 최신 강의 3개 조회 -->
     <select id="selectLatestClasses" resultMap="classMap">
         SELECT 
+<<<<<<< HEAD
             c.class_number,
             c.title,
             c.description,
@@ -51,6 +52,11 @@
             u.name
         FROM CLASS c
         JOIN USERS u ON c.uno = u.uno
+=======
+            c.class_number, c.title, c.description, c.category, c.create_time,
+            c.update_time, c.thumbnail, c.rate, c.uno, u.name
+        FROM CLASS c JOIN USERS u ON c.uno = u.uno
+>>>>>>> 751184ce14df6f290f9561852373def57bfaf751
         ORDER BY c.create_time DESC
         FETCH FIRST 3 ROWS ONLY
     </select>
@@ -73,6 +79,7 @@
         </where>
         <choose>
             <when test="sort == '최신순'">
+<<<<<<< HEAD
                 ORDER BY c.create_time DESC
             </when>
             <when test="sort == '평점순'">
@@ -109,15 +116,51 @@
         </where>
         <choose>
             <when test="sort = '최신순'">
+=======
+>>>>>>> 751184ce14df6f290f9561852373def57bfaf751
                 ORDER BY c.create_time DESC
             </when>
-            <when test="sort = '평점순'">
+            <when test="sort == '평점순'">
                 ORDER BY c.rate DESC
             </when>
             <otherwise>
                 ORDER BY c.create_time DESC
             </otherwise>
         </choose>
+    </select>
+
+<<<<<<< HEAD
+    <select id="selectClassNo" resultType="int">
+        SELECT seq_class_class_number.NEXTVAL FROM dual
+    </select>
+
+    <insert id="insertClass" parameterType="com.kh.dto.ClassDTO">
+        INSERT INTO CLASS (class_number, title, description, category, create_time, update_time, thumbnail, rate, uno)
+        VALUES (#{classNumber}, #{title}, #{description}, #{category}, SYSDATE, SYSDATE, #{thumbnail}, 0, #{uno})
+    </insert>
+
+=======
+    <select id="searchClasses" resultMap="classMap">
+        SELECT c.class_number, c.title, c.description, c.category, 
+            c.create_time, c.update_time, c.thumbnail, c.rate, 
+            c.uno, u.name
+        FROM CLASS c
+        JOIN USERS u ON c.uno = u.uno
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (LOWER(c.title) LIKE '%' || LOWER(#{searchKeyword}) || '%')
+            </if>
+
+            <if test="category != null and category != '전체'">
+                AND c.category = #{category}
+            </if>
+        </where>
+        <if test="sort eq '평점순'">
+            ORDER BY c.rate DESC
+        </if>
+        <if test="sort eq '최신순' or sort == null">
+            ORDER BY c.create_time DESC
+        </if>
     </select>
 
     <select id="selectClassNo" resultType="int">
@@ -129,6 +172,7 @@
         VALUES (#{classNumber}, #{title}, #{description}, #{category}, SYSDATE, SYSDATE, #{thumbnail}, 0, #{uno})
     </insert>
 
+>>>>>>> 751184ce14df6f290f9561852373def57bfaf751
 
 
 </mapper>

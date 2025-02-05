@@ -107,6 +107,7 @@ public class ClassController {
 
         Map<String, Object> map = new HashMap<>();
 
+<<<<<<< HEAD
         System.out.println(map);
 
         try {
@@ -120,6 +121,13 @@ public class ClassController {
             System.out.println("강사?? : "+userGrade);
             
             
+=======
+        try {
+            token = token != null ? token.replace("Bearer ", "") : null;
+            String role = tokenProvider.getRoleFromToken(token);
+            int userGrade = "강사".equals(role) ? 1 : 2;
+
+>>>>>>> 751184ce14df6f290f9561852373def57bfaf751
             if (userGrade != 1) {
                 map.put("code", 3);
                 map.put("msg", "강사만 강의 등록이 가능합니다.");
@@ -130,10 +138,17 @@ public class ClassController {
             ClassDTO classDTO = objectMapper.readValue(params, ClassDTO.class);
 
             // 수신한 데이터 로그
+<<<<<<< HEAD
              System.out.println(" 강의 데이터 확인:");
              System.out.println("제목: " + classDTO.getTitle());
              System.out.println("설명: " + classDTO.getDescription());
              System.out.println("카테고리: " + classDTO.getCategory());
+=======
+            // System.out.println(" 강의 데이터 확인:");
+            // System.out.println("제목: " + classDTO.getTitle());
+            // System.out.println("설명: " + classDTO.getDescription());
+            // System.out.println("카테고리: " + classDTO.getCategory());
+>>>>>>> 751184ce14df6f290f9561852373def57bfaf751
 
             if (thumbnailFile != null) {
                 System.out.println("썸네일 파일 확인: " + thumbnailFile.getOriginalFilename());
@@ -174,7 +189,11 @@ public class ClassController {
         return map;
     }
 
+<<<<<<< HEAD
     @GetMapping("/{classNumber}")
+=======
+    @GetMapping("/class/{classNumber}")
+>>>>>>> 751184ce14df6f290f9561852373def57bfaf751
     public Map<String, Object> classView(@PathVariable int classNumber) {
         Map<String, Object> map = new HashMap<>();
         ClassDTO classDTO = classService.selectClass(classNumber);
