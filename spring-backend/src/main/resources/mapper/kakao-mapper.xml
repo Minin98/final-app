@@ -6,7 +6,7 @@
 	<!-- DTO 매핑 -->
     <resultMap type="com.kh.dto.KakaoDTO" id="kakaoMap">
         <id column="uno" property="uno" />
-        <result column="kakao_id" property="kakaoId"/>
+        <result column="id" property="kakaoId"/>
         <result column="name" property="name"/>
         <result column="nickname" property="nickname"/>
         <result column="email" property="email"/>
@@ -15,14 +15,14 @@
     </resultMap>
     <!-- 카카오 아이디 체크 -->
     <select id="checkKakaoId" resultType="int">
-    	select count(*) from kakao_users where kakao_id = #{kakaoId}
+    	select count(*) from users where id = #{kakaoId}
     </select>
     <!-- 카카오 로그인 -->
     <select id="kakaoLogin" resultType="com.kh.dto.KakaoDTO">
-    	select * from kakao_users where kakao_id = #{kakaoId}
+    	select * from users where id = #{kakaoId}
     </select>
     <insert id="insertKakaoUser" parameterType="com.kh.dto.KakaoDTO">
-    	insert into kakao_users(uno, kakao_id, nickname, name, email, phone, grade)
-		values(kakao_users_seq.NEXTVAL, #{kakaoId}, #{nickname}, #{name}, #{email}, #{phone}, #{grade})
+    	insert into users(uno, id, nickname, name, email, phone, grade)
+		values(users_uno_seq.NEXTVAL, #{kakaoId}, #{nickname}, #{name}, #{email}, #{phone}, #{grade})
     </insert>
 </mapper>
