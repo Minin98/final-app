@@ -18,11 +18,14 @@ public interface UsersMapper {
 
 	int checkNickNameExists(String nickname);
 
-	int checkKakaoId(String uno);
+	int checkUsersNickname(String nickname);
 
-	int insertKakaoUser(Map<String, Object> map);
+	int checkKakaoNickname(String nickname);
 
-	KakaoDTO findKakaoUser(String uno);
+	UsersDTO findUserByUno(String string);
 
+	UsersDTO updateUser(UsersDTO user);
+
+	int updateprofilepath(UsersDTO user);
 
 }

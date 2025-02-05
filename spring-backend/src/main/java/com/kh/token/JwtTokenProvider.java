@@ -65,7 +65,7 @@ public class JwtTokenProvider {
 
 	// 유저 등급
 	public String getRoleFromToken(String token) {
-		return (String) getClaims(token).get("roles");
+		return (String) getClaims(token).get("grade");
 	}
 
 	// 유저 닉네임

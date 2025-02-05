@@ -1,5 +1,6 @@
 package com.kh.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class KakaoDTO {
     private String uno;
     private String kakaoId;
@@ -16,9 +18,13 @@ public class KakaoDTO {
     private String phone;
     private int grade;
     
-    public KakaoDTO(String uno, String nickname, int grade) {
-        this.uno = uno;
-        this.nickname = nickname;
-        this.grade = grade;
-    }
+	public KakaoDTO(String kakaoId, String name, String nickname, String email, String phone, int grade) {
+		this.kakaoId = kakaoId;
+		this.name = name;
+		this.nickname = nickname;
+		this.email = email;
+		this.phone = phone;
+		this.grade = grade;
+	}
+   
 }

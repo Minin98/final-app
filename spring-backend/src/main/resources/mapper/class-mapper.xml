@@ -25,22 +25,13 @@
     </select>
 
     <select id="selectLatestClasses" resultMap="classMap">
-    SELECT 
-    c.class_number,
-    c.title,
-    c.description,
-    c.category,
-    c.create_time,
-    c.update_time,
-    c.thumbnail,
-    c.rate,
-    c.uno,
-    u.name
-FROM CLASS c
-JOIN USERS u ON c.uno = u.uno
-ORDER BY c.create_time DESC
-FETCH FIRST 3 ROWS ONLY
-</select>
+        SELECT 
+            c.class_number, c.title, c.description, c.category, c.create_time,
+            c.update_time, c.thumbnail, c.rate, c.uno, u.name
+        FROM CLASS c JOIN USERS u ON c.uno = u.uno
+        ORDER BY c.create_time DESC
+        FETCH FIRST 3 ROWS ONLY
+    </select>
 
     <select id="getAllClasses" resultMap="classMap">
         SELECT *
@@ -59,10 +50,10 @@ FETCH FIRST 3 ROWS ONLY
             </if>
         </where>
         <choose>
-            <when test="sort = '최신순'">
+            <when test="sort == '최신순'">
                 ORDER BY c.create_time DESC
             </when>
-            <when test="sort = '평점순'">
+            <when test="sort == '평점순'">
                 ORDER BY c.rate DESC
             </when>
             <otherwise>
@@ -72,32 +63,37 @@ FETCH FIRST 3 ROWS ONLY
     </select>
 
     <select id="searchClasses" resultMap="classMap">
-    SELECT c.class_number, c.title, c.description, c.category, 
-           c.create_time, c.update_time, c.thumbnail, c.rate, 
-           c.uno, u.name
-    FROM CLASS c
-    JOIN USERS u ON c.uno = u.uno
-    <where>
-        <if test="searchKeyword != null and searchKeyword != ''">
-    AND (LOWER(c.title) LIKE '%' || LOWER(#{searchKeyword}) || '%')
-</if>
+        SELECT c.class_number, c.title, c.description, c.category, 
+            c.create_time, c.update_time, c.thumbnail, c.rate, 
+            c.uno, u.name
+        FROM CLASS c
+        JOIN USERS u ON c.uno = u.uno
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (LOWER(c.title) LIKE '%' || LOWER(#{searchKeyword}) || '%')
+            </if>
 
-        <if test="category != null and category != '전체'">
-            AND c.category = #{category}
-        </if>
-    </where>
-    <choose>
-        <when test="sort = '최신순'">
-            ORDER BY c.create_time DESC
-        </when>
-        <when test="sort = '평점순'">
+            <if test="category != null and category != '전체'">
+                AND c.category = #{category}
+            </if>
+        </where>
+        <if test="sort eq '평점순'">
             ORDER BY c.rate DESC
-        </when>
-        <otherwise>
+        </if>
+        <if test="sort eq '최신순' or sort == null">
             ORDER BY c.create_time DESC
-        </otherwise>
-    </choose>
-</select>
+        </if>
+    </select>
+
+    <select id="selectClassNo" resultType="int">
+        SELECT seq_class_class_number.NEXTVAL FROM dual
+    </select>
+
+    <insert id="insertClass" parameterType="com.kh.dto.ClassDTO">
+        INSERT INTO CLASS (class_number, title, description, category, create_time, update_time, thumbnail, rate, uno)
+        VALUES (#{classNumber}, #{title}, #{description}, #{category}, SYSDATE, SYSDATE, #{thumbnail}, 0, #{uno})
+    </insert>
+
 
 
 </mapper>

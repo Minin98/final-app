@@ -19,21 +19,31 @@
         WHERE id = #{id}
     </select>
      <!-- 닉네임 중복 체크 -->
-    <select id="checkNickNameExists" resultType="int">
+    <select id="checkUsersNickname" resultType="int">
         SELECT COUNT(*)
         FROM users
         WHERE nickname = #{nickname}
     </select>
-    <!-- 카카오 유저 체크 -->
-    <select id="checkKakaoId" resultType="int">
-    	select count(*) from kakao_user where uno = #{uno}
+    <select id="checkKakaoNickname" resultType="int">
+        SELECT COUNT(*)
+        FROM kakao_users
+        WHERE nickname = #{nickname}
     </select>
-    <!-- 카카오 유저 저장 -->
-    <insert id="insertKakaoUser" parameterType="com.kh.dto.KakaoDTO">
-    	insert into kakao_user(uno, nickname, grade) values(#{uno}, #{nickname}, #{grade})
-    </insert>
-    <!-- 카카오 유저 로그인 -->
-    <select id="findKakaoUser" resultType="com.kh.dto.KakaoDTO">
-    	select * from kakao_user where uno = #{uno}
-    </select>
+    <update id="updateUser" parameterType="com.kh.dto.UsersDTO">
+		UPDATE USERS SET 
+    NICKNAME = #{nickname},
+    NAME = #{name},
+    EMAIL = #{email},
+    PHONE = #{phone},
+    GRADE = #{grade}
+		WHERE UNO = #{uno};
+	</update>
+    <select id="findUserByUno" parameterType="String" resultType="com.kh.dto.UsersDTO">
+		SELECT *FROM USERS u WHERE u.UNO = #{v}
+	</select>
+    <update id="updateprofilepath" parameterType="com.kh.dto.UsersDTO">
+      UPDATE USERS SET 
+      PROFILEPATH = #{profilepath}
+		  WHERE UNO = #{uno}
+    </update>
 </mapper>
