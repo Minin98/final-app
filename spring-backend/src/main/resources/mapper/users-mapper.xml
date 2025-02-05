@@ -38,7 +38,7 @@
     GRADE = #{grade}
 		WHERE UNO = #{uno};
 	</update>
-    <select id="findUserByUno" parameterType="int" resultType="com.kh.dto.UsersDTO">
+    <select id="findUserByUno" parameterType="String" resultType="com.kh.dto.UsersDTO">
 		SELECT *FROM USERS u WHERE u.UNO = #{v}
 	</select>
     <update id="updateprofilepath" parameterType="com.kh.dto.UsersDTO">
