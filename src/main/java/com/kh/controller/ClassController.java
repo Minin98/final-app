@@ -109,8 +109,7 @@ public class ClassController {
 
         try {
             token = token != null ? token.replace("Bearer ", "") : null;
-            String role = tokenProvider.getRoleFromToken(token);
-            int userGrade = Integer.parseInt(role);
+            int userGrade = tokenProvider.getRoleFromToken(token);
             
             System.out.println(userGrade);
             
