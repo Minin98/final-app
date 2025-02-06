@@ -113,7 +113,7 @@ public class ClassController {
             // String role = tokenProvider.getRoleFromToken(token);
             // int userGrade = Integer.parseInt(role);
             
-            System.out.println(userGrade);
+            System.out.println("등급 : " + userGrade);
             
             if (userGrade != 1) {
                 map.put("code", 3);
