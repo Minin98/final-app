@@ -1,5 +1,7 @@
 package com.kh.dto;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,6 @@ import lombok.ToString;
 public class ChapterDTO {
     private int chapterNumber;
     private int classNumber;
-    private String chapterName;  // ✅ 반드시 String이어야 함
-    private String chapterCreateTime;
+    private String chapterName;
+    private Timestamp chapterCreateTime;
 }

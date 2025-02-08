@@ -21,11 +21,17 @@ public interface ClassMapper {
             @Param("category") String category,
             @Param("sort") String sort
     );
-
-    List<ClassDTO> searchClasses(String searchKeyword, String category, String sort);
+ 
+    // 강의 검색 (썸네일 포함)
+    List<ClassDTO> searchClasses(
+            @Param("searchKeyword") String searchKeyword, 
+            @Param("category") String category, 
+            @Param("sort") String sort
+    );
 
     int selectClassNo(); // 새 강의 번호 생성
 
     int insertClass(ClassDTO classDTO); // 강의 등록
 
+    int updateClass(ClassDTO specificClass); // 강의 수정
 }

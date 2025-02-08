@@ -18,8 +18,8 @@
         <result column="name" property="name"/>
     </resultMap>
 
-   <!-- 특정 강의 조회 -->
-    <select id="selectClass" parameterType="int" resultType="com.kh.dto.ClassDTO">
+    <!-- 특정 강의 조회 -->
+    <select id="selectClass" parameterType="int" resultMap="classMap">
         SELECT 
             c.class_number,
             c.title,
@@ -60,10 +60,20 @@
         FROM CLASS
         ORDER BY create_time DESC
     </select> 
- 
-    <!-- 강의목록 조회 카테고리 및 정렬 조건을 적용 -->
+
+    <!-- 강의목록 조회 -->
     <select id="selectClassList" resultMap="classMap">
-        SELECT c.*, u.name 
+        SELECT 
+            c.class_number,
+            c.title,
+            c.description,
+            c.category,
+            c.create_time,
+            c.update_time,
+            c.thumbnail,
+            c.rate,
+            c.uno,
+            u.name
         FROM CLASS c
         JOIN USERS u ON c.uno = u.uno
         <where>
@@ -72,10 +82,10 @@
             </if>
         </where>
         <choose>
-            <when test="sort = '최신순'">
+            <when test="sort == '최신순'">
                 ORDER BY c.create_time DESC
             </when>
-            <when test="sort = '평점순'">
+            <when test="sort == '평점순'">
                 ORDER BY c.rate DESC
             </when>
             <otherwise>
@@ -84,10 +94,17 @@
         </choose>
     </select>
 
-    <!-- 강의 검색 기능 -->
     <select id="searchClasses" resultMap="classMap">
         SELECT 
-            c.*,
+            c.class_number,
+            c.title,
+            c.description,
+            c.category,
+            c.create_time,
+            c.update_time,
+            c.thumbnail,
+            c.rate,
+            c.uno,
             u.name
         FROM CLASS c
         JOIN USERS u ON c.uno = u.uno
@@ -100,10 +117,10 @@
             </if>
         </where>
         <choose>
-            <when test="sort = '최신순'">
+            <when test="sort == '최신순'">
                 ORDER BY c.create_time DESC
             </when>
-            <when test="sort = '평점순'">
+            <when test="sort == '평점순'">
                 ORDER BY c.rate DESC
             </when>
             <otherwise>
@@ -112,14 +129,25 @@
         </choose>
     </select>
 
+
     <select id="selectClassNo" resultType="int">
-        SELECT seq_class_class_number.NEXTVAL FROM dual
+        SELECT CLASS_NUMBER_SEQ.NEXTVAL FROM dual
     </select>
 
     <insert id="insertClass" parameterType="com.kh.dto.ClassDTO">
         INSERT INTO CLASS (class_number, title, description, category, create_time, update_time, thumbnail, rate, uno)
         VALUES (#{classNumber}, #{title}, #{description}, #{category}, SYSDATE, SYSDATE, #{thumbnail}, 0, #{uno})
     </insert>
+
+    <update id="updateClass" parameterType="com.kh.dto.ClassDTO">
+        UPDATE Class SET 
+        title = #{title},
+        description = #{description},
+        category = #{category, jdbcType=VARCHAR},
+        thumbnail = #{thumbnail},
+        update_time = SYSDATE
+        WHERE class_number = #{classNumber}
+    </update>
 
 
 
