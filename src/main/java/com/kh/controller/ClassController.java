@@ -12,20 +12,39 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.dto.ChapterDTO;
 import com.kh.dto.ClassDTO;
+import com.kh.dto.UsersDTO;
 import com.kh.dto.VideoDTO;
 
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpHeaders;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -223,7 +242,6 @@ public class ClassController {
 
             // 강의 정보 업데이트
             classService.updateClass(dto);
-        
 
             map.put("code", 1);
             map.put("msg", "강의 수정 성공");
@@ -237,32 +255,41 @@ public class ClassController {
         return map;
     }
 
-        // 강의 삭제
-/* 
-    @DeleteMapping("/board/{bno}")
-	public Map<String, Object> boardDelete(@PathVariable int bno, @RequestHeader("Authorization") String token) {
-		Map<String, Object> map = new HashMap<>();
-		token = token != null ? token.replace("Bearer ", "") : null;
-		if (token != null && tokenProvider.getUserIDFromToken(token).equals(boardService.selectBoard(bno).getId())) {
-			// 첨부파일 삭제
-			// 1. 파일 목록 받아옴
-			List<BoardFileDTO> fileList = boardService.getBoardFileList(bno);
-			// 2. 파일 삭제
-			fileList.forEach(file -> {
-				File f = new File(file.getFpath());
-				f.delete();
-			});
-			// 만약 board, board_file 테이블이 외래키로 cascade 제약조건이 설정되어있지 않다면, 직접 board_file 테이블의
-			// 데이터를 삭제해야함.
-			boardService.deleteBoard(bno);
-			map.put("code", 1);
-			map.put("msg", "해당 게시글 삭제를 완료하였습니다.");
-		} else {
-			map.put("code", 2);
-			map.put("msg", "게시글 삭제를 실패하였습니다.");
-		}
-		return map;
-	}
- */
+    // 강의 삭제
+    @DeleteMapping("/{classNumber}")
+    public Map<String, Object> classDelete(@RequestHeader(value = "Authorization", required = false) String token,
+            @PathVariable int classNumber) {
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            // 토큰이 없거나 비어있는 경우
+            if (token == null || token.trim().isEmpty()) {
+                map.put("code", 2);
+                map.put("msg", "인증 토큰이 없습니다.");
+                return map;
+            }
+
+            // 공백 정리
+            token = token.replace("Bearer ", "").trim();
+
+            String userNumber = tokenProvider.getUserNumberFromToken(token);
+            String classOwner = classService.selectClass(classNumber).getUno();
+
+            if (userNumber.equals(classOwner)) {
+                classService.deleteClass(classNumber);
+                map.put("code", 1);
+                map.put("msg", "강의 삭제를 완료하였습니다.");
+            } else {
+                map.put("code", 2);
+                map.put("msg", "삭제 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 3);
+            map.put("msg", "강의 삭제 중 오류 발생: " + e.getMessage());
+        }
+
+        return map;
+    }
 
 }

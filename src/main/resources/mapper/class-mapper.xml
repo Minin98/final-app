@@ -18,7 +18,7 @@
         <result column="name" property="name"/>
     </resultMap>
 
-    <!-- 특정 강의 조회 -->
+   <!-- 특정 강의 조회 -->
     <select id="selectClass" parameterType="int" resultMap="classMap">
         SELECT 
             c.class_number,
@@ -149,6 +149,10 @@
         WHERE class_number = #{classNumber}
     </update>
 
+    <delete id="deleteClass" parameterType="int">
+        DELETE FROM class
+        WHERE class_number = #{classNumber}
+    </delete>
 
 
 </mapper>

@@ -33,5 +33,8 @@ public interface ClassMapper {
 
     int insertClass(ClassDTO classDTO); // 강의 등록
 
-    int updateClass(ClassDTO specificClass); // 강의 수정
+    int updateClass(ClassDTO dto); // 강의 수정
+
+    int deleteClass(int classNumber);   // 강의 삭제
+
 }

@@ -1,7 +1,9 @@
 package com.kh.service;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
+
 import com.kh.dto.ClassDTO;
 import com.kh.mapper.ClassMapper;
 
@@ -44,5 +46,9 @@ public class ClassService {
     public int updateClass(ClassDTO dto) {
         return mapper.updateClass(dto);
     }
-    
+
+    public int deleteClass(int classNumber) {
+        return mapper.deleteClass(classNumber);
+    }
+
 }
