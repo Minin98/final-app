@@ -15,7 +15,7 @@ public class VideoDTO {
     private int videoNumber;
     private int chapterNumber;
     private String videoTitle;
-    private String videoURL;
+    private String videoId;
     private int videoDuration;
     private int videoOrderNumber;
     private String videoCreateTime;
