@@ -164,24 +164,33 @@ public class ClassController {
     @GetMapping("/{classNumber}")
     public Map<String, Object> classView(@PathVariable int classNumber) {
         Map<String, Object> map = new HashMap<>();
-        ClassDTO classDTO = classService.selectClass(classNumber);
-        List<ChapterDTO> chapters = chapterService.selectChapter(classNumber);
+        try {
+            ClassDTO classDTO = classService.selectClass(classNumber);
+            List<ChapterDTO> chapters = chapterService.selectChapter(classNumber);
+            if (chapters == null)
+                chapters = new ArrayList<>();
 
-        if (chapters == null) {
-            chapters = new ArrayList<>();
+            Map<Integer, List<VideoDTO>> videoMap = new HashMap<>();
+            for (ChapterDTO chapter : chapters) {
+                int chapterNumber = chapter.getChapterNumber();
+                try {
+                    List<VideoDTO> videos = videoService.selectVideo(chapterNumber);
+                    videoMap.put(chapterNumber, videos);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    videoMap.put(chapterNumber, new ArrayList<>()); // 오류 발생 시 빈 리스트 반환
+                }
+            }
+
+            map.put("class", classDTO);
+            map.put("chapter", chapters);
+            map.put("video", videoMap);
+            map.put("code", 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code", 2);
+            map.put("msg", "강의 정보를 불러오는 중 오류 발생");
         }
-
-        Map<Integer, List<VideoDTO>> videoMap = new HashMap<>();
-
-        for (ChapterDTO chapter : chapters) {
-            int chapterNumber = chapter.getChapterNumber();
-            List<VideoDTO> videos = videoService.selectVideo(chapterNumber);
-            videoMap.put(chapterNumber, videos);
-        }
-
-        map.put("class", classDTO);
-        map.put("chapter", chapters);
-        map.put("video", videoMap);
         return map;
     }
 

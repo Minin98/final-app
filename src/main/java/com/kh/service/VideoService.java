@@ -8,6 +8,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.kh.dto.VideoDTO;
 import com.kh.mapper.VideoMapper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -16,63 +18,153 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class VideoService {
-
+ 
     @Value("${youtube.api.key}")
-    private String apiKey; // application-API-KEY.properties에서 API 키 가져오기
+    private String apiKey;
 
-    private final RestTemplate restTemplate = new RestTemplate(); // HTTP 요청을 위한 RestTemplate 객체
-    private final VideoMapper mapper; // MyBatis를 통한 DB 접근
+    private final VideoMapper mapper;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    // 해당 챕터의 영상 목록 조회 (기존 기능 유지)
+    // 해당 챕터의 영상 목록 조회
     public List<VideoDTO> selectVideo(int chapterNumber) {
-        return mapper.selectVideo(chapterNumber);
-    }
-
-    // 유튜브 API를 통해 영상 ID, 길이 가져오기
-    private int getVideoDuration(String videoId) {
-        String apiUrl = UriComponentsBuilder
-                .fromHttpUrl("https://www.googleapis.com/youtube/v3/videos")
-                .queryParam("id", videoId)
-                .queryParam("part", "contentDetails")
-                .queryParam("key", apiKey)
-                .toUriString();
-
         try {
-            Map<String, Object> response = restTemplate.getForObject(apiUrl, Map.class);
-            if (response != null && response.containsKey("items")) {
-                var items = (List<Map<String, Object>>) response.get("items");
-                if (!items.isEmpty()) {
-                    var contentDetails = (Map<String, Object>) items.get(0).get("contentDetails");
-                    return convertISO8601ToSeconds(contentDetails.get("duration").toString()); // 초 단위 변환
-                }
-            }
+            return mapper.selectVideo(chapterNumber);
         } catch (Exception e) {
             e.printStackTrace();
+            System.err.println("영상 조회 실패 - chapterNumber: " + chapterNumber);
+            return new ArrayList<>();
         }
-        return 0; // 오류 발생 시 0초 반환
     }
 
-    // 영상을 등록할 때 API를 통해 영상 길이 , 영상ID 가져와 DB에 저장
-    public boolean insertVideo(int chapterNumber, String videoTitle, String videoId) {
-        int videoDuration = getVideoDuration(videoId); // 영상 길이 가져오기
+    // 특정 영상 정보 조회
+    public VideoDTO getVideoByNumber(int videoNumber) {
+        VideoDTO video = mapper.getVideoByNumber(videoNumber);
+        if (video == null) {
+            System.err.println("해당 videoNumber에 대한 영상 없음: " + videoNumber);
+        }
+        return video;
+    }
+    
+
+    // 특정 영상의 이전/다음 영상 및 챕터 정보를 가져옴
+    public Map<String, Object> getPrevNextVideo(int videoNumber, int chapterNumber, int classNumber) {
+        Map<String, Object> videoData = new HashMap<>();
+        VideoDTO video = mapper.getVideoByNumber(videoNumber);
+
+        if (video == null) {
+            videoData.put("code", 0);
+            videoData.put("message", "해당 videoNumber에 대한 영상 없음");
+            return videoData;
+        }
+
+        videoData.put("video", video);
+        videoData.put("code", 1);
+        videoData.put("message", "영상 조회 성공");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("videoNumber", videoNumber);
+        params.put("chapterNumber", chapterNumber);
+        params.put("classNumber", classNumber);
+
+        // 이전 영상 찾기 (없으면 null 반환)
+        Integer prevVideoId = mapper.getPrevVideoNumber(params);
+        if (prevVideoId == null) {
+            Integer prevChapter = mapper.getPrevChapter(params);
+            if (prevChapter != null) {
+                params.put("chapterNumber", prevChapter);
+                prevVideoId = mapper.getLastVideoOfChapter(params);
+            }
+        }
+        videoData.put("prevVideoId", prevVideoId); // null 반환 가능
+
+        // 다음 영상 찾기 (없으면 null 반환)
+        Integer nextVideoId = mapper.getNextVideoNumber(params);
+        if (nextVideoId == null) {
+            Integer nextChapter = mapper.getNextChapter(params);
+            if (nextChapter != null) {
+                params.put("chapterNumber", nextChapter);
+                nextVideoId = mapper.getFirstVideoOfChapter(params);
+            }
+        }
+        videoData.put("nextVideoId", nextVideoId); // null 반환 가능
+
+        return videoData;
+    }
+
+    // 유튜브 URL에서 Video ID 추출
+    private String extractVideoId(String videoUrl) {
+        try {
+            String regex = "^(?:https?:\\/\\/)?(?:www\\.)?(?:youtube\\.com\\/(?:[^\\/]+\\/.*\\/|(?:v|e(?:mbed)?)\\/|.*[?&]v=)|youtu\\.be\\/)([^\"&?\\/\\s]{11})";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(videoUrl);
+            return matcher.find() ? matcher.group(1) : null;
+        } catch (Exception e) {
+            System.err.println("유튜브 ID 추출 실패: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // 유튜브 API를 통해 영상 길이 가져오기
+    private int getVideoDuration(String videoId) {
+        try {
+            String apiUrl = UriComponentsBuilder
+                    .fromHttpUrl("https://www.googleapis.com/youtube/v3/videos")
+                    .queryParam("id", videoId)
+                    .queryParam("part", "contentDetails")
+                    .queryParam("key", apiKey)
+                    .toUriString();
+
+            Map<String, Object> response = restTemplate.getForObject(apiUrl, Map.class);
+            if (response == null || !response.containsKey("items")) {
+                System.err.println("유튜브 API 응답 없음");
+                return 0;
+            }
+
+            List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+            if (items.isEmpty()) {
+                System.err.println("유튜브 API에서 해당 videoId의 정보 없음");
+                return 0;
+            }
+
+            String duration = (String) ((Map<String, Object>) items.get(0).get("contentDetails")).get("duration");
+            return duration != null ? convertISO8601ToSeconds(duration) : 0;
+        } catch (Exception e) {
+            System.err.println("유튜브 API 요청 실패: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // 유튜브 영상 등록 (URL 입력받아 자동 등록)
+    public boolean insertVideo(int classNumber, int chapterNumber, String videoTitle, String videoUrl) {
+        String videoId = extractVideoId(videoUrl);
+        if (videoId == null) {
+            System.err.println("유효하지 않은 유튜브 URL: " + videoUrl);
+            return false;
+        }
+
+        int videoDuration = getVideoDuration(videoId);
         if (videoDuration == 0) {
-            return false; // 유효한 영상이 아닐 경우 저장하지 않음
+            System.err.println("유효하지 않은 영상 길이: " + videoUrl);
+            return false;
         }
 
-        VideoDTO video = new VideoDTO(0, chapterNumber, videoTitle, videoId, videoDuration, 0, null);
-        return mapper.insertVideo(video) > 0; // DB에 저장 성공 여부 반환
+        VideoDTO video = new VideoDTO(0, classNumber, chapterNumber, videoTitle, videoId, videoDuration, 0, null);
+        return mapper.insertVideo(video) > 0;
     }
 
-    // ISO 8601 형식의 시간(PnYnMnDTnHnMnS)을 초 단위로 변환
+    // ISO 8601 형식의 시간을 초 단위로 변환
     private int convertISO8601ToSeconds(String duration) {
         Pattern pattern = Pattern.compile("PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?");
         Matcher matcher = pattern.matcher(duration);
         int hours = 0, minutes = 0, seconds = 0;
 
         if (matcher.matches()) {
-            if (matcher.group(1) != null) hours = Integer.parseInt(matcher.group(1));
-            if (matcher.group(2) != null) minutes = Integer.parseInt(matcher.group(2));
-            if (matcher.group(3) != null) seconds = Integer.parseInt(matcher.group(3));
+            if (matcher.group(1) != null)
+                hours = Integer.parseInt(matcher.group(1));
+            if (matcher.group(2) != null)
+                minutes = Integer.parseInt(matcher.group(2));
+            if (matcher.group(3) != null)
+                seconds = Integer.parseInt(matcher.group(3));
         }
         return hours * 3600 + minutes * 60 + seconds;
     }
