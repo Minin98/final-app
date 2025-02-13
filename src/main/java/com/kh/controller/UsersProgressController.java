@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/users-progress")
+@RequestMapping("/usersProgress")
 @RequiredArgsConstructor
 public class UsersProgressController {
 
