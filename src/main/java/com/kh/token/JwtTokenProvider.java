@@ -29,7 +29,7 @@ public class JwtTokenProvider {
 				.subject(member.getUno()).signWith(key).compact();
 	}
 
-	private Map<String, Object> createClaims(UsersDTO member) {
+	private Map<String, Object> createClaims(UsersDTO member) {	
 		Map<String, Object> map = new HashMap<>();
 		map.put("grade", member.getGrade());
 		map.put("nickname", member.getNickname());

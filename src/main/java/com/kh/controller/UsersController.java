@@ -61,7 +61,7 @@ public class UsersController {
 		String email = body.get("email");
 		String phone = body.get("phone");
 		int grade = "student".equals(body.get("role")) ? 2 : 1;
-		UsersDTO dto = new UsersDTO(name, id, nickname, password, email, phone, grade);
+		UsersDTO dto = new UsersDTO( id, nickname, password, name, email, phone, grade);
 		int count = usersService.insertUser(dto);
 		map.put("count", count);
 		if (count > 0) {
@@ -146,5 +146,21 @@ public class UsersController {
 	
 	private String removeBearer(String token) {
 		return token != null && token.startsWith("Bearer ")? token.substring("Bearer ".length()).trim(): null;
+	}
+	
+	@PostMapping("/findPassword")
+	public Map<String, Object> findPassword(@RequestBody Map<String, String> body){
+		HashMap<String, Object> map = new HashMap<>();
+		String uno = body.get("uno");
+		String pwd = body.get("pwd");
+		int result = usersService.findPassword(uno, pwd);
+		if(result == 1) {
+			map.put("msg", "비밀번호가 변경되었습니다.");
+			map.put("code", 1);
+		} else {
+			map.put("msg", "비밀번호 변경에 실패하였습니다.");
+			map.put("code", 2);
+		}
+		return map;
 	}
 }

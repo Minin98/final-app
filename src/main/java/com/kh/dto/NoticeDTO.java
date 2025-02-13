@@ -6,16 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChapterDTO {
-    private int chapterNumber;
+public class NoticeDTO {
+    private int noticeNumber;
+    private String noticeTitle;
+    private String noticeContent;
+    private String noticeCreateTime;
+    private String uno;
     private int classNumber;
-    private String chapterName;
-    private String chapterCreateTime;
-    private int quizCount;
 }

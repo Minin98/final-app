@@ -34,16 +34,13 @@ public class UsersService {
 	}
 
 	public boolean checkIdExists(String id) {
-		System.out.println(id);
 		int count = mapper.checkIdExists(id);
-		System.out.println(count);
 		return count > 0;
 	}
 
 	public boolean checkNickNameExists(String nickname) {
-		if (mapper.checkUsersNickname(nickname) > 0 || mapper.checkKakaoNickname(nickname) > 0)
-			return true;
-		return false;
+		int count = mapper.checkNickNameExists(nickname);
+		return count > 0;
 	}
 
 	public UsersDTO findUserByUno(String string) {
@@ -56,6 +53,21 @@ public class UsersService {
 
 	public int updateprofilepath(UsersDTO user) {
 		return mapper.updateprofilepath(user);
+	}
+
+	public int checkEmail(String email) {
+		return mapper.checkEmail(email);
+	}
+
+	public UsersDTO findUserByEmail(String email) {
+		return mapper.findUserByEmail(email);
+	}
+
+	public int findPassword(String uno, String pwd) {
+		Map<String, String> map = new HashMap<>();
+		map.put("uno", uno);
+		map.put("password", pwd);
+		return mapper.updatePassword(map);
 	}
 
 }

@@ -4,7 +4,6 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.mapper.ClassMapper">
 
-    <!-- DTO 매핑 -->
     <resultMap type="com.kh.dto.ClassDTO" id="classMap">
         <id column="class_number" property="classNumber" />
         <result column="uno" property="uno" />

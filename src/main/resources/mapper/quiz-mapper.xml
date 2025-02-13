@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.mapper.QuizMapper">
+	<resultMap id="quizMap" type="com.kh.dto.QuizDTO">
+		<id column="quiz_id" property="quizId" />
+		<result column="chapter_number" property="chapterNumber" />
+		<result column="quiz_number" property="quizNumber" />
+	</resultMap>
+	<insert id="insertQuizItem" parameterType="com.kh.dto.QuizDTO">
+		INSERT INTO quiz
+		(chapter_number, quiz_number, question, answer,
+		description)
+		VALUES
+		(#{chapterNumber}, #{quizNumber}, #{question}, #{answer},
+		#{description})
+	</insert>
+	<delete id="deleteQuiz" parameterType="int">
+		delete from quiz where
+		chapter_number = #{chapterNumber}
+	</delete>
+	<select id="selectQuizList" parameterType="int" resultMap="quizMap">
+		SELECT * FROM quiz where chapter_number = #{chapterNumber}
+	</select>
+</mapper>

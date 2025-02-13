@@ -19,14 +19,9 @@
         WHERE id = #{id}
     </select>
      <!-- 닉네임 중복 체크 -->
-    <select id="checkUsersNickname" resultType="int">
+    <select id="checkNickNameExists" resultType="int">
         SELECT COUNT(*)
         FROM users
-        WHERE nickname = #{nickname}
-    </select>
-    <select id="checkKakaoNickname" resultType="int">
-        SELECT COUNT(*)
-        FROM kakao_users
         WHERE nickname = #{nickname}
     </select>
     <update id="updateUser" parameterType="com.kh.dto.UsersDTO">
@@ -45,5 +40,17 @@
       UPDATE USERS SET 
       PROFILEPATH = #{profilepath}
 		  WHERE UNO = #{uno}
+    </update>
+    <!-- email 체크 -->
+    <select id="checkEmail" resultType="int">
+    	select count(*) from users where email = #{email}
+    </select>
+    <!-- email로 유저 조회 -->
+    <select id="findUserByEmail" resultType="com.kh.dto.UsersDTO">
+    	select * from users where email = #{email}
+    </select>
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword" parameterType="map">
+    	update users set password = standard_hash(#{password},'SHA512') where uno = #{uno}
     </update>
 </mapper>
