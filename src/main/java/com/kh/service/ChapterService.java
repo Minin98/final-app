@@ -26,4 +26,29 @@ public class ChapterService {
     public List<ChapterDTO> selectChapter(int classNumber) {
         return mapper.selectChapter(classNumber);
     }
+
+    // 챕터 수정
+    public int updateChapterName(int chapterNumber, String chapterName) {
+        return mapper.updateChapterName(chapterNumber, chapterName);
+    }
+
+    // 챕터 내 영상 개수 조회
+    public int getVideoCount(int chapterNumber) {
+        return mapper.getVideoCount(chapterNumber);
+    }
+
+    // 챕터 내 퀴즈 개수 조회
+    public int getQuizCount(int chapterNumber) {
+        return mapper.getQuizCount(chapterNumber);
+    }
+
+    // 챕터 삭제
+    public int deleteChapter(int chapterNumber) {
+        // 먼저 영상 & 퀴즈 삭제
+        mapper.deleteVideosByChapter(chapterNumber);
+        mapper.deleteQuizzesByChapter(chapterNumber);
+
+        // 마지막으로 챕터 삭제
+        return mapper.deleteChapter(chapterNumber);
+    }
 }

@@ -34,4 +34,36 @@
         VALUES (#{chapterNumber}, #{chapterName}, SYSDATE, #{classNumber})
     </insert>
 
+    <!-- 챕터 수정 -->
+    <update id="updateChapterName">
+        UPDATE CHAPTER
+        SET CHAPTER_NAME = #{chapterName}
+        WHERE CHAPTER_NUMBER = #{chapterNumber}
+    </update>
+
+    <!-- 챕터 내 영상 개수 조회 -->
+    <select id="getVideoCount" resultType="int">
+        SELECT COUNT(*) FROM VIDEO WHERE CHAPTER_NUMBER = #{chapterNumber}
+    </select>
+
+    <!-- 챕터 내 퀴즈 개수 조회 -->
+    <select id="getQuizCount" resultType="int">
+        SELECT COUNT(*) FROM QUIZ WHERE CHAPTER_NUMBER = #{chapterNumber}
+    </select>
+
+    <!-- 챕터 내 영상 삭제 -->
+    <delete id="deleteVideosByChapter">
+        DELETE FROM VIDEO WHERE CHAPTER_NUMBER = #{chapterNumber}
+    </delete>
+
+    <!-- 챕터 내 퀴즈 삭제 -->
+    <delete id="deleteQuizzesByChapter">
+        DELETE FROM QUIZ WHERE CHAPTER_NUMBER = #{chapterNumber}
+    </delete>
+
+    <!-- 챕터 삭제 -->
+    <delete id="deleteChapter">
+        DELETE FROM CHAPTER WHERE CHAPTER_NUMBER = #{chapterNumber}
+    </delete>
+
 </mapper>

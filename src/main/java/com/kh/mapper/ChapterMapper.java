@@ -16,4 +16,22 @@ public interface ChapterMapper {
 
     // 챕터 등록
     int insertChapter(ChapterDTO chapter);
+
+    // 챕터 수정
+    int updateChapterName(@Param("chapterNumber") int chapterNumber, @Param("chapterName") String chapterName);
+
+    // 챕터 내 영상 개수 조회
+    int getVideoCount(@Param("chapterNumber") int chapterNumber);
+
+    // 챕터 내 퀴즈 개수 조회
+    int getQuizCount(@Param("chapterNumber") int chapterNumber);
+
+    // 챕터 내 영상 삭제
+    int deleteVideosByChapter(@Param("chapterNumber") int chapterNumber);
+
+    // 챕터 내 퀴즈 삭제
+    int deleteQuizzesByChapter(@Param("chapterNumber") int chapterNumber);
+
+    // 챕터 삭제
+    int deleteChapter(@Param("chapterNumber") int chapterNumber);
 }
