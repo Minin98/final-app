@@ -34,3 +34,6 @@ build/
 
 ### API-KEY ###
 application-API-KEY.properties
+
+### firebase-service-key ###
+src/main/resources/firebase-service-key.json

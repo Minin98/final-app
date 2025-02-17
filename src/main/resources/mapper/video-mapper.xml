@@ -57,55 +57,28 @@
         WHERE v.video_number = #{videoNumber}
     </select>
 
-
-    <!-- 같은 챕터 내에서 이전 영상 찾기 -->
-    <select id="getPrevVideoNumber" parameterType="java.util.Map" resultType="int">
-        SELECT MAX(v.video_number) 
+    <!-- 같은 강의 내에서 현재 영상(videoNumber) 기준 이전 영상 찾기 -->
+    <select id="getPrevVideo" parameterType="map" resultType="int">
+        SELECT v.video_number
         FROM VIDEO v
-        WHERE v.chapter_number = #{chapterNumber} 
-        AND v.video_number <![CDATA[<]]> #{videoNumber}
+        JOIN CHAPTER ch ON v.chapter_number = ch.chapter_number
+        WHERE ch.class_number = #{classNumber}
+        AND (ch.chapter_number &lt; #{chapterNumber} 
+             OR (ch.chapter_number = #{chapterNumber} AND v.video_order_number &lt; #{videoOrderNumber}))
+        ORDER BY ch.chapter_number DESC, v.video_order_number DESC
+        FETCH FIRST 1 ROW ONLY
     </select>
 
-    <!-- 같은 챕터 내에서 다음 영상 찾기 -->
-    <select id="getNextVideoNumber" parameterType="java.util.Map" resultType="int">
-        SELECT MIN(v.video_number) 
+    <!-- 같은 강의 내에서 현재 영상(videoNumber) 기준 다음 영상 찾기 -->
+    <select id="getNextVideo" parameterType="map" resultType="int">
+        SELECT v.video_number
         FROM VIDEO v
-        WHERE v.chapter_number = #{chapterNumber} 
-        AND v.video_number <![CDATA[>]]> #{videoNumber}
-    </select>
-
-    <!-- 현재 강의 내에서 이전 챕터 찾기 -->
-    <select id="getPrevChapter" parameterType="java.util.Map" resultType="int">
-        SELECT MAX(c.chapter_number) 
-        FROM CHAPTER c
-        WHERE c.class_number = #{classNumber} 
-        AND c.chapter_number <![CDATA[<]]> #{chapterNumber}
-    </select>
-
-    <!-- 현재 강의 내에서 다음 챕터 찾기 -->
-    <select id="getNextChapter" parameterType="java.util.Map" resultType="int">
-        SELECT MIN(c.chapter_number) 
-        FROM CHAPTER c
-        WHERE c.class_number = #{classNumber} 
-        AND c.chapter_number <![CDATA[>]]> #{chapterNumber}
-    </select>
-
-    <!-- 이전 챕터의 마지막 영상 찾기 -->
-    <select id="getLastVideoOfChapter" parameterType="java.util.Map" resultType="int">
-        SELECT MAX(v.video_number) 
-        FROM VIDEO v
-        JOIN CHAPTER c ON v.chapter_number = c.chapter_number
-        WHERE c.class_number = #{classNumber}
-        AND c.chapter_number = #{chapterNumber}
-    </select>
-
-    <!-- 다음 챕터의 첫 번째 영상 찾기 -->
-    <select id="getFirstVideoOfChapter" parameterType="java.util.Map" resultType="int">
-        SELECT MIN(v.video_number) 
-        FROM VIDEO v
-        JOIN CHAPTER c ON v.chapter_number = c.chapter_number
-        WHERE c.class_number = #{classNumber}
-        AND c.chapter_number = #{chapterNumber}
+        JOIN CHAPTER ch ON v.chapter_number = ch.chapter_number
+        WHERE ch.class_number = #{classNumber}
+        AND (ch.chapter_number &gt; #{chapterNumber} 
+             OR (ch.chapter_number = #{chapterNumber} AND v.video_order_number &gt; #{videoOrderNumber}))
+        ORDER BY ch.chapter_number ASC, v.video_order_number ASC
+        FETCH FIRST 1 ROW ONLY
     </select>
 
 </mapper>

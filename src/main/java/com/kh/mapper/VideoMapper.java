@@ -17,15 +17,9 @@ public interface VideoMapper {
     // videoNumber로 영상 조회
     VideoDTO getVideoByNumber(int videoNumber);
 
-    Integer getPrevVideoNumber(Map<String, Object> params);
+    // 같은 강의 내에서 현재 영상 기준 이전 영상 찾기
+    Integer getPrevVideo(Map<String, Object> params);
 
-    Integer getNextVideoNumber(Map<String, Object> params);
-
-    Integer getPrevChapter(Map<String, Object> params);
-
-    Integer getNextChapter(Map<String, Object> params);
-
-    Integer getLastVideoOfChapter(Map<String, Object> params);
-
-    Integer getFirstVideoOfChapter(Map<String, Object> params);
+    // 같은 강의 내에서 현재 영상 기준 다음 영상 찾기
+    Integer getNextVideo(Map<String, Object> params);
 }
