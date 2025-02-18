@@ -51,4 +51,8 @@ public class ClassService {
         return mapper.deleteClass(classNumber);
     }
 
+    public List<ClassDTO> selectClassListByUno(String uno) {
+        return mapper.selectClassListByUno(uno);
+    }
+
 }

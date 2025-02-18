@@ -34,4 +34,6 @@ public interface ChapterMapper {
 
     // 챕터 삭제
     int deleteChapter(@Param("chapterNumber") int chapterNumber);
+
+    String getChapterName(int chapterNumber);
 }

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.kh.dto.KakaoDTO;
 import com.kh.dto.UsersDTO;
 import com.kh.mapper.UsersMapper;
 
@@ -64,10 +63,26 @@ public class UsersService {
 	}
 
 	public int findPassword(String uno, String pwd) {
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("uno", uno);
 		map.put("password", pwd);
 		return mapper.updatePassword(map);
 	}
+
+	public int updateUserInfo(HashMap<String , Object> map) {
+		return mapper.updateUserInfo(map);
+	}
+
+	public int deleteUno(String uno) {
+		return mapper.deleteUno(uno);
+	}
+
+	public int checkUser(HashMap<String, Object> map) {
+		return mapper.checkUser(map);
+	}
+
+    public int updatePassword(Map<String,Object> map) {
+		return mapper.updatePassword(map);
+    }
 
 }

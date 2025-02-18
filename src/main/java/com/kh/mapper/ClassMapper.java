@@ -37,4 +37,6 @@ public interface ClassMapper {
 
     int deleteClass(int classNumber);   // 강의 삭제
 
+    List<ClassDTO> selectClassListByUno(String uno); // 강사 강의 목록 조회
+
 }

@@ -27,7 +27,7 @@ public class VideoService {
 
     // 유튜브 영상 등록
     public boolean insertVideo(int classNumber, int chapterNumber, String videoTitle, String videoUrl) {
-        // YouTubeService를 활용 영상 ID 및 길이 가져오기
+        // YouTubeService 영상 ID 및 길이 가져오기
         YouTubeService.VideoData videoData = youTubeService.getVideoData(videoUrl);
         if (videoData == null) {
             System.err.println("유효하지 않은 유튜브 URL 또는 영상 길이 조회 실패: " + videoUrl);

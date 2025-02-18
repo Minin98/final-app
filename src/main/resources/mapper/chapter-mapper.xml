@@ -9,6 +9,7 @@
         <result column="CLASS_NUMBER" property="classNumber"/>
         <result column="CHAPTER_NAME" property="chapterName"/>
         <result column="CHAPTER_CREATE_TIME" property="chapterCreateTime"/>
+        <result column="QUIZ_COUNT" property="quizCount"/>
     </resultMap>
 
     <!-- 특정 강의의 챕터 목록 -->
@@ -65,5 +66,10 @@
     <delete id="deleteChapter">
         DELETE FROM CHAPTER WHERE CHAPTER_NUMBER = #{chapterNumber}
     </delete>
+
+    <!-- 챕터 이름 가져오기 -->
+	<select id="getChapterName" parameterType="int" resultType="string">
+		select chapter_name from chapter where chapter_number = #{chapterNumber}
+	</select>
 
 </mapper>

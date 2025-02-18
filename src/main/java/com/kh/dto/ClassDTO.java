@@ -20,4 +20,8 @@ public class ClassDTO {
     private String thumbnail;
     private String uno;
     private String name;
+
+    private int chapterCount;
+    private int videoCount;
+    private int studentCount;
 }

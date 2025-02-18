@@ -1,5 +1,7 @@
 package com.kh.service;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +25,12 @@ public class KakaoService {
 		return mapper.insertKakaoUser(dto);
 	}
 
+
+	public int updateKakaoInfo(HashMap<String, Object> map) {
+		return mapper.updateKakaoInfo(map);
+	}
+
+	public KakaoDTO findKakaoByUno(String uno) {
+		return mapper.findKakaoByUno(uno);
+	}
 }

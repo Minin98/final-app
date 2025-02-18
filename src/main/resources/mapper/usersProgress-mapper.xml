@@ -11,6 +11,8 @@
         <result column="completion_status" property="completionStatus" />
         <result column="completion_rate" property="completionRate" />
         <result column="progress_update_time" property="progressUpdateTime" jdbcType="TIMESTAMP"/>
+        <result column="title" property="title"/>
+        <result column="instructor_name" property="instructorName"/>
     </resultMap>
 
     <select id="checkProgress" resultType="int">
@@ -18,6 +20,24 @@
         FROM USERS_PROGRESS 
         WHERE UNO = #{uno} 
         AND CLASS_NUMBER = #{classNumber}
+    </select>
+
+    <!-- 수강중인 강의 조회 -->
+    <select id="selectRecentClasses" parameterType="String" resultMap="usersProgressMap">
+        SELECT 
+            up.USERS_PROGRESS_NUMBER,
+            up.UNO,
+            up.CLASS_NUMBER,
+            up.COMPLETION_STATUS,
+            up.COMPLETION_RATE,
+            up.PROGRESS_UPDATE_TIME,
+            v.TITLE,
+            v.INSTRUCTOR_NAME
+        FROM USERS_PROGRESS up
+        JOIN CLASS_WITH_INSTRUCTOR v ON up.CLASS_NUMBER = v.CLASS_NUMBER
+        WHERE up.UNO = #{uno}
+        ORDER BY up.PROGRESS_UPDATE_TIME DESC
+        FETCH FIRST 5 ROWS ONLY
     </select>
 
     <insert id="applicationInsert">

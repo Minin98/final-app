@@ -1,7 +1,10 @@
 package com.kh.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.kh.dto.UsersProgressDTO;
 import com.kh.mapper.UsersProgressMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,10 @@ public class UsersProgressService {
 
     public int cancelProgress(String uno, int classNumber) {
         return usersProgressMapper.cancelProgress(uno, classNumber);
+    }
+
+    public List<UsersProgressDTO> selectRecentClasses(String uno) {
+        return usersProgressMapper.selectRecentClasses(uno);
     }
 
 }

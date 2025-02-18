@@ -27,6 +27,10 @@ public class ChapterService {
         return mapper.selectChapter(classNumber);
     }
 
+    public String getChapterName(int chapterNumber) {
+        return mapper.getChapterName(chapterNumber);
+    }
+
     // 챕터 수정
     public int updateChapterName(int chapterNumber, String chapterName) {
         return mapper.updateChapterName(chapterNumber, chapterName);

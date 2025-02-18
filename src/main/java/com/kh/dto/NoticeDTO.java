@@ -4,9 +4,9 @@ import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class NoticeDTO {
     private int noticeNumber;
     private String noticeTitle;

@@ -8,6 +8,18 @@
 		<result column="chapter_number" property="chapterNumber" />
 		<result column="quiz_number" property="quizNumber" />
 	</resultMap>
+	<resultMap id="quizProgress" type="com.kh.dto.QuizProgressDTO">
+		<id column="quiz_progress_number" property="quizProgressNumber" />
+		<result column="chapter_number" property="chapterNumber" />
+		<result column="progress_count" property="progressCount" />
+	</resultMap>
+	<resultMap id="quizProgressByClass" type="com.kh.dto.ClassQuizProgressDTO">
+	    <id column="class_number" property="classNumber" />
+	    <id column="chapter_number" property="chapterNumber" />
+	    <id column="uno" property="uno" />
+	    <result column="chapter_progress" property="chapterProgress" />
+	    <result column="class_progress" property="classProgress" />
+	</resultMap>
 	<insert id="insertQuizItem" parameterType="com.kh.dto.QuizDTO">
 		INSERT INTO quiz
 		(chapter_number, quiz_number, question, answer,
@@ -22,5 +34,44 @@
 	</delete>
 	<select id="selectQuizList" parameterType="int" resultMap="quizMap">
 		SELECT * FROM quiz where chapter_number = #{chapterNumber}
+	</select>
+	<insert id="saveQuizRecord" parameterType="com.kh.dto.QuizRecordDTO">
+		insert into quiz_record(uno, quiz_id, chapter_number, selected_answer, is_correct) values(#{uno}, #{quizId}, #{chapterNumber}, #{selectedAnswer}, #{isCorrect})
+	</insert>
+	<select id="getQuizProgress" parameterType="map" resultMap="quizProgress">
+		select * from quiz_progress where uno = #{uno} and chapter_number = #{chapterNumber}
+	</select>
+	<insert id="insertQuizProgress" parameterType="map">
+		INSERT INTO quiz_progress (uno, progress_count, chapter_number, total_quizzes)
+    	VALUES (#{uno}, #{progressCount}, #{chapterNumber}, #{totalQuizzes})
+	</insert>
+	<update id="updateQuizProgress" parameterType="map">
+		UPDATE quiz_progress
+    	SET progress_count = #{progressCount}
+    	WHERE uno = #{uno} AND chapter_number = #{chapterNumber}
+	</update>
+	<select id="getCorrectCount" parameterType="map" resultType="int">
+		SELECT COUNT(*) 
+	    FROM quiz_record 
+	    WHERE uno = #{uno} 
+	    AND chapter_number = #{chapterNumber} 
+	    AND is_correct = 1
+	</select>
+	<select id="getProgressCount" parameterType="map" resultType="java.lang.Integer">
+	    SELECT NVL(progress_count, 0)
+	    FROM quiz_progress
+	    WHERE uno = #{uno} AND chapter_number = #{chapterNumber}
+	</select>
+	<select id="getQuizProgressByClassNumber" parameterType="map" resultMap="quizProgressByClass">
+	    SELECT * 
+		FROM quiz_progress_view 
+		WHERE uno = #{uno} 
+		AND class_number = #{classNumber}
+	</select>
+	<select id="getClassProgress" parameterType="string" resultMap="quizProgressByClass">
+	    SELECT DISTINCT uno, class_number, class_progress
+		FROM user_quiz_progress_with_userprogress
+		WHERE uno = #{uno}
+		ORDER BY uno, class_number 
 	</select>
 </mapper>
