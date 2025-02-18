@@ -14,14 +14,7 @@
 
     <!-- 특정 강의의 챕터 목록 -->
     <select id="selectChapter" parameterType="int" resultMap="ChapterMap">
-        SELECT 
-            CHAPTER_NUMBER, 
-            CHAPTER_NAME, 
-            CHAPTER_CREATE_TIME,
-            CLASS_NUMBER
-        FROM CHAPTER
-        WHERE CLASS_NUMBER = #{classNumber}
-        ORDER BY CHAPTER_CREATE_TIME ASC
+        SELECT * FROM chapter_with_quiz_count WHERE class_number = #{classNumber} ORDER BY CHAPTER_CREATE_TIME ASC
     </select>
 
     <!-- 새 챕터 번호 생성  -->
