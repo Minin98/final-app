@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.kh.dto.KakaoDTO;
 import com.kh.dto.UsersDTO;
 import com.kh.mapper.UsersMapper;
 
@@ -50,8 +51,8 @@ public class UsersService {
 		return mapper.updateUser(user);
 	}
 
-	public int updateprofilepath(UsersDTO user) {
-		return mapper.updateprofilepath(user);
+	public int updateprofileimg(UsersDTO user) {
+		return mapper.updateprofileimg(user);
 	}
 
 	public int checkEmail(String email) {
