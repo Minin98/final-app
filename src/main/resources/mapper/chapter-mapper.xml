@@ -12,7 +12,7 @@
         <result column="QUIZ_COUNT" property="quizCount"/>
     </resultMap>
 
-    <!-- 특정 강의의 챕터 목록 -->
+    <!-- 특정 강의의 챕터 목록(퀴즈카운트 추가 view 이용) -->
     <select id="selectChapter" parameterType="int" resultMap="ChapterMap">
         SELECT * FROM chapter_with_quiz_count WHERE class_number = #{classNumber} ORDER BY CHAPTER_CREATE_TIME ASC
     </select>
