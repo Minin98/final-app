@@ -97,7 +97,7 @@
 
     <!-- 비밀번호 변경 -->
     <update id="updatePassword" parameterType="map">
-        update users set password = standard_hash(#{password},'SHA512') where uno = #{uno}
+        update users set password = standard_hash(#{newpassword},'SHA512') where uno = #{uno}
     </update>
 
 </mapper>

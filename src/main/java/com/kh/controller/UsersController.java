@@ -219,6 +219,7 @@ public class UsersController {
 		Map<String, Object> result = new HashMap<>();
 		String uno = tokenProvider.getUserNumberFromToken(removeBearer(token));
 		map.put("uno", uno);
+		System.out.println(map);
 		int work = usersService.updatePassword(map);
 		if (work >= 1) {
 			result.put("msg", "비밀번호 변경 완료");

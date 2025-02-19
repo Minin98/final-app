@@ -83,6 +83,7 @@ public class UsersService {
 	}
 
     public int updatePassword(Map<String,Object> map) {
+			System.out.println(map);
 		return mapper.updatePassword(map);
     }
 
