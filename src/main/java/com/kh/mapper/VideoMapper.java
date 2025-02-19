@@ -1,6 +1,8 @@
 package com.kh.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.kh.dto.VideoDTO;
 import java.util.List;
 import java.util.Map;
@@ -22,4 +24,13 @@ public interface VideoMapper {
 
     // 같은 강의 내에서 현재 영상 기준 다음 영상 찾기
     Integer getNextVideo(Map<String, Object> params);
+
+    // 영상 수정
+    int updateVideo(@Param("videoNumber") int videoNumber,
+            @Param("videoTitle") String videoTitle,
+            @Param("videoId") String videoId,
+            @Param("videoDuration") Integer videoDuration);
+
+    // 영상 삭제
+    int deleteVideo(@Param("videoNumber") int videoNumber);
 }
