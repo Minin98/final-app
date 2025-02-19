@@ -79,4 +79,19 @@ public class VideoService {
 
         return videoData;
     }
+
+    // 유튜브 URL 영상 정보
+    public YouTubeService.VideoData extractVideoData(String videoUrl) {
+        return youTubeService.getVideoData(videoUrl);
+    }
+
+    // 영상 수정
+    public boolean updateVideo(int videoNumber, String videoTitle, String videoId, Integer videoDuration) {
+        return mapper.updateVideo(videoNumber, videoTitle, videoId, videoDuration) > 0;
+    }
+
+    // 영상 삭제
+    public boolean deleteVideo(int videoNumber) {
+        return mapper.deleteVideo(videoNumber) > 0;
+    }
 }
