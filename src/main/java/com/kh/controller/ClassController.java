@@ -3,6 +3,7 @@ package com.kh.controller;
 import com.kh.service.ChapterService;
 import com.kh.service.ClassService;
 import com.kh.service.QuizService;
+import com.kh.service.RateService;
 import com.kh.service.VideoService;
 import com.kh.token.JwtTokenProvider;
 
@@ -29,6 +30,7 @@ public class ClassController {
     private final ChapterService chapterService;
     private final VideoService videoService;
     private final QuizService quizService;
+    private final RateService rateService;
     private final JwtTokenProvider tokenProvider;
 
     // 강의 목록 조회
@@ -134,15 +136,20 @@ public class ClassController {
         }
 
         Map<Integer, List<VideoDTO>> videoMap = new HashMap<>();
+
         for (ChapterDTO chapter : chapters) {
             int chapterNumber = chapter.getChapterNumber();
             List<VideoDTO> videos = videoService.selectVideo(chapterNumber);
             videoMap.put(chapterNumber, videos);
         }
+        // 평균 평점 조회
+        int rate = rateService.getRate(classNumber);
 
         map.put("class", classDTO);
         map.put("chapter", chapters);
         map.put("video", videoMap);
+        map.put("rate", rate);
+
         return map;
     }
 

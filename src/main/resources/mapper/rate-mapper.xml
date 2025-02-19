@@ -47,4 +47,17 @@
         WHERE rate_number = #{rateNumber} AND uno = #{uno}
     </delete>
 
+    <select id="selectAverageRate" parameterType="int" resultType="int">
+        SELECT NVL(FLOOR(SUM(rate_score) / NULLIF(COUNT(*), 0)), 0)
+        FROM rate
+        WHERE class_number = #{classNumber}
+    </select>
+
+    <update id="updateClassRate" parameterType="map">
+        UPDATE class
+        SET rate = #{rate}
+        WHERE class_number = #{classNumber}
+    </update>
+
+
 </mapper>
