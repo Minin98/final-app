@@ -33,10 +33,11 @@
             c.thumbnail,
             c.rate,
             c.uno,
-            u.name
+            u.name,
+            (SELECT COUNT(DISTINCT up.uno) FROM USERS_PROGRESS up WHERE up.class_number = c.class_number) AS studentCount
         FROM CLASS c
         JOIN USERS u ON c.uno = u.uno
-        WHERE class_number = #{classNumber}
+        WHERE c.class_number = #{classNumber}
     </select>
 
     <!-- 최신 강의 3개 조회 -->

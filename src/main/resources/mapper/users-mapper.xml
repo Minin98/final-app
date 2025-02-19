@@ -49,11 +49,18 @@
         SELECT * FROM USERS u WHERE u.UNO = #{v}
     </select>
 
-    <update id="updateprofilepath" parameterType="com.kh.dto.UsersDTO">
-        UPDATE USERS SET 
-        PROFILEPATH = #{profilepath}
-        WHERE UNO = #{uno}
-    </update>
+    <update id="updateprofileimg" parameterType="com.kh.dto.UsersDTO">
+    UPDATE USERS 
+    SET PROFILEIMG = 
+    <if test="profileimg != null">
+        #{profileimg, jdbcType=BLOB}
+    </if>
+    <if test="profileimg == null">
+        NULL
+    </if>
+    WHERE UNO = #{uno}
+</update>
+
 
     <update id="updateUserInfo" parameterType="map">
         UPDATE USERS

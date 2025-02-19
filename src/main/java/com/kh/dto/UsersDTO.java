@@ -1,6 +1,10 @@
 package com.kh.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -16,8 +20,8 @@ public class UsersDTO {
 	private String email;
 	private String phone;
 	private int grade;
-	private String profilepath;
-
+	private byte[] profileimg;
+	
 	public UsersDTO(String id, String nickname, String password, String name, String email, String phone, int grade) {
 		this.id = id;
 		this.nickname = nickname;

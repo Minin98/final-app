@@ -26,11 +26,11 @@ public interface ChapterMapper {
     // 챕터 내 퀴즈 개수 조회
     int getQuizCount(@Param("chapterNumber") int chapterNumber);
 
-    // // 챕터 내 영상 삭제
-    // int deleteVideosByChapter(@Param("chapterNumber") int chapterNumber);
+    // 챕터 내 영상 삭제
+    int deleteVideosByChapter(@Param("chapterNumber") int chapterNumber);
 
-    // // 챕터 내 퀴즈 삭제
-    // int deleteQuizzesByChapter(@Param("chapterNumber") int chapterNumber);
+    // 챕터 내 퀴즈 삭제
+    int deleteQuizzesByChapter(@Param("chapterNumber") int chapterNumber);
 
     // 챕터 삭제
     int deleteChapter(@Param("chapterNumber") int chapterNumber);

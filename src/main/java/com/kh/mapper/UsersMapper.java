@@ -26,7 +26,7 @@ public interface UsersMapper {
 
 	UsersDTO updateUser(UsersDTO user);
 
-	int updateprofilepath(UsersDTO user);
+	int updateprofileimg(UsersDTO user);
 
 	int checkEmail(String email);
 

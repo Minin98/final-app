@@ -7,7 +7,9 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -113,108 +115,61 @@ public class UsersController {
 		return map;
 	}
 
-	@PostMapping("/ProfileImage")
-	public Map<String, Object> profileImage(@RequestHeader("Authorization") String token) {
-		Map<String, Object> responseMap = new HashMap<>();
-		UsersDTO user = usersService.findUserByUno(
-				tokenProvider.getUserNumberFromToken(removeBearer(token)));
-		String profilePath = user.getProfilepath();
-		System.out.println("DB에 저장된 프로필 경로: " + profilePath);
-		if (!"non".equals(profilePath)) {
-			File localFile = null;
-			try {
-				String fileName = new File(profilePath).getName();
-				String localPath = "C:\\KHLMS\\users\\"
-						+ user.getUno()
-						+ File.separator
-						+ fileName;
-				localFile = new File(localPath);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	@GetMapping("/GetUserProfile")
+	public ResponseEntity<Map<String, Object>> getUserProfile(@RequestHeader("Authorization") String token) {
+		UsersDTO user = usersService.findUserByUno(tokenProvider.getUserNumberFromToken(removeBearer(token)));
 
-			if (localFile != null && localFile.exists() && localFile.isFile()) {
-				responseMap.put("profileImageUrl", profilePath);
-			} else {
-				responseMap.put("error", "이미지가 존재하지 않습니다. 경로: " + profilePath);
-			}
+		Map<String, Object> response = new HashMap<>();
+		System.out.println("getProfileimg:" + user.getProfileimg());
+
+		if (user.getProfileimg() != null && user.getProfileimg().length > 0) {
+			// BLOB 데이터를 Base64로 변환
+			String base64Image = Base64.getEncoder().encodeToString(user.getProfileimg());
+			response.put("profileImg", "data:image/png;base64," + base64Image);
 		} else {
-			responseMap.put("error", "프로필 이미지가 설정되지 않았습니다. (\"non\")");
+			response.put("profileImg", null); // 빈 값이거나 NULL이면 null 반환
 		}
 
-		return responseMap;
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/UpdateUserProfile")
-	public Map<String, Object> userupdate(
-			@RequestHeader("Authorization") String token,
+	public Map<String, Object> userupdate(@RequestHeader("Authorization") String token,
 			@RequestPart(value = "file", required = false) MultipartFile file) {
+		System.out.println(file == null ? "파일 엄슴" : "파일 있습");
+
 		// 1) 토큰에서 사용자번호 추출 + DB 조회
-		UsersDTO user = usersService.findUserByUno(
-				tokenProvider.getUserNumberFromToken(removeBearer(token)));
+		UsersDTO user = usersService.findUserByUno(tokenProvider.getUserNumberFromToken(removeBearer(token)));
 		HashMap<String, Object> map = new HashMap<>();
 
-		// 2) 물리적 디스크 저장 폴더
-		File root = new File("C:\\KHLMS\\users\\" + user.getUno());
-		if (!root.exists()) {
-			root.mkdirs();
-		}
-
-		// 3) 업로드된 파일이 있는 경우
+		// 2) 업로드된 파일이 있는 경우
 		if (file != null && !file.isEmpty()) {
 			try {
-				// 3-1) 원본 파일명
-				String fileName = file.getOriginalFilename();
+				byte[] fileData = file.getBytes();
+				user.setProfileimg(fileData);
+				usersService.updateprofileimg(user);
 
-				// 3-2) 실제 저장될 물리 경로
-				String filePath = root + File.separator + fileName;
-
-				// (선택) 기존 프로필 파일 삭제
-				deleteFilesInDirectory(root);
-
-				// 3-3) 서버 디스크에 파일 저장
-				file.transferTo(new File(filePath));
-
-				// 3-4) DB에는 웹에서 접근 가능한 경로(/profileImages/...)를 저장
-				String webPath = "/profileImages/" + user.getUno() + "/" + fileName;
-
-				user.setProfilepath(webPath);
-				usersService.updateprofilepath(user);
-
-				map.put("profilePath", webPath);
-				map.put("message", "프로필 이미지가 업데이트되었습니다.");
+				map.put("message", "프로필 이미지가 DB에 저장되었습니다.");
+				map.put("fileSize", fileData.length); // 파일 크기만 로그에 출력
+				System.out.println("업로드된 파일 크기: " + fileData.length + " bytes");
 			} catch (IOException e) {
 				e.printStackTrace();
-				map.put("error1", "서버에서 오류 발생: " + e.getMessage());
+				map.put("error", "파일 업로드 중 오류 발생: " + e.getMessage());
 				return map;
 			}
 		}
-		// 4) 업로드된 파일이 없는 경우(프로필 제거)
+
+		// 3) 업로드된 파일이 없는 경우(프로필 제거)
 		else {
-			// (선택) 기존 파일 삭제
-			deleteFilesInDirectory(root);
+			user.setProfileimg(null); // BLOB 컬럼을 NULL로 설정
+			System.out.println(user.getProfileimg());
+			usersService.updateprofileimg(user);
+			System.out.println(user.getProfileimg());
 
-			user.setProfilepath("non");
-			usersService.updateprofilepath(user);
-
-			map.put("profilePath", "non");
 			map.put("message", "프로필 이미지를 제거했습니다.");
 		}
 
 		return map;
-	}
-
-	private void deleteFilesInDirectory(File directory) {
-		if (directory.exists() && directory.isDirectory()) {
-			File[] files = directory.listFiles();
-			if (files != null) {
-				for (File file : files) {
-					if (file.isFile()) {
-						file.delete(); // 파일 삭제
-					}
-				}
-			}
-		}
 	}
 
 	@PatchMapping("/Updateuserinfo")

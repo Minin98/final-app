@@ -34,7 +34,6 @@
 	</delete>
 	<select id="selectQuizList" parameterType="int" resultMap="quizMap">
 		SELECT * FROM quiz where chapter_number = #{chapterNumber}
-
 	</select>
 	<insert id="saveQuizRecord" parameterType="com.kh.dto.QuizRecordDTO">
 		insert into quiz_record(uno, quiz_id, chapter_number, selected_answer, is_correct) values(#{uno}, #{quizId}, #{chapterNumber}, #{selectedAnswer}, #{isCorrect})

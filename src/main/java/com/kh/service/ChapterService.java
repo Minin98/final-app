@@ -49,8 +49,8 @@ public class ChapterService {
     // 챕터 삭제
     public int deleteChapter(int chapterNumber) {
         // 먼저 영상 & 퀴즈 삭제
-        // mapper.deleteVideosByChapter(chapterNumber);
-        // mapper.deleteQuizzesByChapter(chapterNumber);
+        mapper.deleteVideosByChapter(chapterNumber);
+        mapper.deleteQuizzesByChapter(chapterNumber);
 
         // 마지막으로 챕터 삭제
         return mapper.deleteChapter(chapterNumber);
