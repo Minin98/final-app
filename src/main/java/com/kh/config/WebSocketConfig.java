@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     // ChatWebSocketHandler를 주입받는 생성자 추가
     public WebSocketConfig(ChatWebSocketHandler chatWebSocketHandler) {
         this.chatWebSocketHandler = chatWebSocketHandler;
-    }
+    }// 미쳣다 그냥
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
