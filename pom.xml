@@ -182,6 +182,12 @@
         <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <includeSystemScope>true</includeSystemScope>
+                <layers>
+                    <enabled>false</enabled>
+                </layers>
+            </configuration>
         </plugin>
     </plugins>
 </build>
