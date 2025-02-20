@@ -184,6 +184,8 @@
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
                 <includeSystemScope>true</includeSystemScope>
+								<mainClass>com.kh.SpringBackendApplication</mainClass>  <!-- 실제 Main 클래스 경로 입력 -->
+   							<layout>ZIP</layout>  <!-- JAR 내부 구조 변경 -->
                 <layers>
                     <enabled>false</enabled>
                 </layers>
