@@ -12,8 +12,6 @@ import com.kh.service.UsersProgressService;
 import com.kh.service.UsersService;
 import com.kh.service.ClassService;
 import com.kh.dto.ClassDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

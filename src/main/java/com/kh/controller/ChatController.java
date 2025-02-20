@@ -1,5 +1,7 @@
 package com.kh.controller;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,5 +23,17 @@ public class ChatController {
     @GetMapping("/chat/room")
     public ChatRoom getChatRoom(@RequestParam String classNumber) {
         return chatRooms.get(classNumber);
+    }
+
+    @GetMapping("/test-json")
+    public String testJson() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("test", "value");
+            return json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "{\"error\": \"JSON Exception occurred\"}";
+        }
     }
 }
