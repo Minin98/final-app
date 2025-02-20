@@ -44,7 +44,7 @@ jobs:
       run: |
         ssh-keyscan -t ed25519 ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
     - name: Deploy to Server # 운영서버에 /home/ubuntu 폴더에 빌드가 완료된 jar 파일을 복사
-      run: scp target/*.jar ubuntu@ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com:~/
+      run: rsync target/*.jar ubuntu@ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com:~/
     - name: Run SSH Commands
       run: |
         ssh -i ~/.ssh/id_rsa ubuntu@ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com << 'EOF'
