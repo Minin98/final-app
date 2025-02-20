@@ -28,7 +28,7 @@ public class ChatController {
     @GetMapping("/test-json")
     public String testJson() {
         try {
-            JSONObject json = new JSONObject();
+            JSONObject json = new JSONObject();//돌겟네
             json.put("test", "value");
             return json.toString();
         } catch (JSONException e) {
