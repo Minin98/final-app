@@ -49,7 +49,7 @@ jobs:
           -keystore keystore.p12 -validity 3650 \
           -dname "CN=ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com, OU=Backend, O=MyCompany, L=Seoul, ST=Seoul, C=KR" \
           -ext SAN=DNS:ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com,DNS:final-react-insup-minin98s-projects.vercel.app,DNS:localhost,IP:127.0.0.1 \
-          -storepass "${{ secrets.KEYSTORE_PASSWORD }}"
+          -storepass "${{secrets.KEYSTORE_PASSWORD}}"
     - name: Deploy to Server # 운영서버에 /home/ubuntu 폴더에 빌드가 완료된 jar 파일을 복사
       run: |
         rsync target/*.jar ubuntu@ec2-43-201-154-174.ap-northeast-2.compute.amazonaws.com:~/
