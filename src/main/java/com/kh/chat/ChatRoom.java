@@ -13,7 +13,7 @@ import lombok.Setter;
 public class ChatRoom {
     private String lectureId;  // 강의 ID
     private String instructorId; // 강의 작성자 ID
-    private Set<WebSocketSession> sessions = new HashSet<>(); // 보낸사람들의 WebSocketSession
+    private Set<WebSocketSession> sessions = new HashSet<>(); // 보낸사람들의 WebSocketSession 진짜 끝내고싶다
 
     public ChatRoom(String lectureId, String instructorId) {
         this.lectureId = lectureId;
